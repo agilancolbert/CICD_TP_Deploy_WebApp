@@ -17,10 +17,6 @@ data "aws_ami" "selected" {
     values = ["available"]
 
   }
-  filter {
-    name   = "tag:Name"
-    values = ["Packer-Ansible"]
-  }
   most_recent = true
 }
 
