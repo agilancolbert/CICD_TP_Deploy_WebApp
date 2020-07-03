@@ -12,6 +12,10 @@ variable "env" {
   default = "dev"
 }
 
+variable "app_port" {
+  type = string
+}
+
 ####################################################################
 # On recherche la derniere AMI créée avec le Name TAG PackerAnsible-Apache
 data "aws_ami" "selected" {
@@ -85,9 +89,9 @@ resource "aws_security_group" "web-sg-asg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port       = 443
+    from_port       = var.app_port
     protocol        = "tcp"
-    to_port         = 443
+    to_port         = var.app_port
     security_groups = [aws_security_group.web-sg-elb.id] # on authorise en entrée de l'ASG que le flux venant de l'ELB
   }
   lifecycle {
@@ -105,9 +109,9 @@ resource "aws_security_group" "web-sg-elb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port   = 443
+    from_port   = var.app_port
     protocol    = "tcp"
-    to_port     = 443
+    to_port     = var.app_port
     cidr_blocks = ["0.0.0.0/0"]   # Normalement Ouvert sur le web sauf dans le cas d'un site web Privé(Exemple Intranet ou nous qui ne voulons pas exposer le site)
   }
   lifecycle {
@@ -154,16 +158,16 @@ resource "aws_elb" "web-elb" {
   security_groups = [aws_security_group.web-sg-elb.id]
 
   listener {
-    instance_port     = 443
+    instance_port     = var.app_port
     instance_protocol = "http"
-    lb_port           = 443
+    lb_port           = var.app_port
     lb_protocol       = "http"
   }
 
   health_check {
     healthy_threshold   = 2
     interval            = 30
-    target              = "HTTP:443/"
+    target              = "HTTP:${var.app_port}/"
     timeout             = 3
     unhealthy_threshold = 2
   }
