@@ -14,6 +14,7 @@ variable "env" {
 
 variable "app_port" {
   type = string
+  default = 443
 }
 
 ####################################################################
