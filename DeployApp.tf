@@ -89,9 +89,9 @@ resource "aws_security_group" "web-sg-asg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port       = ${var.app_port}
+    from_port       = var.app_port
     protocol        = "tcp"
-    to_port         = ${var.app_port}
+    to_port         = var.app_port
     security_groups = [aws_security_group.web-sg-elb.id] # on authorise en entrée de l'ASG que le flux venant de l'ELB
   }
   lifecycle {
@@ -109,9 +109,9 @@ resource "aws_security_group" "web-sg-elb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port   = ${var.app_port}
+    from_port   = var.app_port
     protocol    = "tcp"
-    to_port     = ${var.app_port}
+    to_port     = var.app_port
     cidr_blocks = ["0.0.0.0/0"]   # Normalement Ouvert sur le web sauf dans le cas d'un site web Privé(Exemple Intranet ou nous qui ne voulons pas exposer le site)
   }
   lifecycle {
@@ -158,9 +158,9 @@ resource "aws_elb" "web-elb" {
   security_groups = [aws_security_group.web-sg-elb.id]
 
   listener {
-    instance_port     = ${var.app_port}
+    instance_port     = var.app_port
     instance_protocol = "http"
-    lb_port           = ${var.app_port}
+    lb_port           = var.app_port
     lb_protocol       = "http"
   }
 
