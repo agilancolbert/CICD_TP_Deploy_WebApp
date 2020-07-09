@@ -6,16 +6,6 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-# Variables normalement dans un autre fichier (variables.tf) mais pour faire simple.... ca marche aussi !!!
-variable "env" {
-  type    = string
-  default = "dev"
-}
-
-variable "app_port" {
-  type = number
-}
-
 ####################################################################
 # On recherche la derniere AMI créée avec le Name TAG PackerAnsible-Apache
 data "aws_ami" "selected" {
